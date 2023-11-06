@@ -29,7 +29,14 @@ public class CountryDataService {
 
     public CountryDataService() {
         this.restTemplate = new RestTemplate();
-        this.countries = fetchDataFromApi();
+    }
+
+    public List<Country> getCountries() {
+        // Ensure that countries are initialized before returning
+        if (countries == null) {
+            countries = fetchDataFromApi();
+        }
+        return countries;
     }
 
     private List<Country> fetchDataFromApi() {
@@ -43,12 +50,8 @@ public class CountryDataService {
         }
     }
 
-    public List<Country> getCountries() {
-        return countries;
-    }
-
     public List<Country> getCountriesByPopulationDensity() {
-        List<Country> sortedCountries = new ArrayList<>(countries);
+        List<Country> sortedCountries = new ArrayList<>(getCountries());
         sortedCountries.sort(Comparator.comparingDouble(country -> -country.getPopulation() / country.getArea()));
 
         sortedCountries.forEach(country -> logger.info(country.getName().getCommon() + " Population Density: " +
@@ -58,10 +61,11 @@ public class CountryDataService {
     }
 
     public String getCountryWithMostBorderingCountries(String region) {
-        Map<String, Integer> countryBorderCount = new HashMap<>();
-        List<Country> countriesByRegion = countries.stream()
+        List<Country> countriesByRegion = getCountries().stream()
                 .filter(country -> country.getRegion().equalsIgnoreCase(region))
                 .toList();
+
+        Map<String, Integer> countryBorderCount = new HashMap<>();
 
         for (Country country : countriesByRegion) {
             countryBorderCount.put(country.getName().getCommon(), country.getBorders().size());
