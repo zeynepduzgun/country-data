@@ -34,6 +34,7 @@ public class CountryDataService {
 
     private List<Country> fetchDataFromApi() {
         try {
+            // here getting response as object type and object needs to be mapped into Country.class
             Country[] countryArray = restTemplate.getForObject(apiUrl, Country[].class);
             return countryArray != null ? Arrays.asList(countryArray) : new ArrayList<>();
         } catch (HttpStatusCodeException e) {
