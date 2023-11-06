@@ -68,7 +68,10 @@ public class CountryDataService {
         Map<String, Integer> countryBorderCount = new HashMap<>();
 
         for (Country country : countriesByRegion) {
-            countryBorderCount.put(country.getName().getCommon(), country.getBorders().size());
+            if (country.getBorders() != null) {
+                countryBorderCount.put(country.getName().getCommon(), country.getBorders().size());
+
+            }
         }
 
         String mostBorderingCountries = countryBorderCount.entrySet().stream()

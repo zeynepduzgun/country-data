@@ -38,7 +38,7 @@ public class CountryDataController {
 
     @GetMapping("/most-bordering-country")
     public String getCountryWithMostBorderingCountries(
-            @RequestParam(value = "region", defaultValue = "Asia") String region) {
+            @RequestParam String region) {
         try {
             return countryDataService.getCountryWithMostBorderingCountries(region);
 
