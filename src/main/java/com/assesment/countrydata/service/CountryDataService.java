@@ -34,7 +34,9 @@ public class CountryDataService {
 
     private List<Country> fetchDataFromApi() {
         try {
-            // here getting response as object type and object needs to be mapped into Country.class
+            // here getting response as object type and object needs to be mapped into
+            // Country.class
+            // Send a GET request and map the response to an array of Country objects
             Country[] countryArray = restTemplate.getForObject(apiUrl, Country[].class);
             return countryArray != null ? Arrays.asList(countryArray) : new ArrayList<>();
         } catch (HttpStatusCodeException e) {
@@ -51,7 +53,7 @@ public class CountryDataService {
         List<Country> sortedCountries = new ArrayList<>(countries);
         sortedCountries.sort(Comparator.comparingDouble(country -> -country.getPopulation() / country.getArea()));
 
-        sortedCountries.forEach(country -> logger.info(country.getName() + " Population Density: " +
+        sortedCountries.forEach(country -> logger.info(country.getName().getCommon() + " Population Density: " +
                 (country.getPopulation() / country.getArea())));
 
         return sortedCountries;
@@ -64,7 +66,7 @@ public class CountryDataService {
                 .toList();
 
         for (Country country : countriesByRegion) {
-            countryBorderCount.put(country.getName(), country.getBorders().size());
+            countryBorderCount.put(country.getName().getCommon(), country.getBorders().size());
         }
 
         String mostBorderingCountries = countryBorderCount.entrySet().stream()
