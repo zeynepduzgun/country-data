@@ -38,9 +38,13 @@ public class CountryDataControllerTest {
     @Test
     public void testGetCountriesByPopulationDensity() {
         // Arrange
+        Country.Name name1 = new Country.Name();
+        name1.setCommon("Country1");
+        Country.Name name2 = new Country.Name();
+        name2.setCommon("Country2");
         List<Country> mockCountryList = List.of(
-                new Country("Country1", "Asia", null, 1000000, 1000),
-                new Country("Country2", "Asia", null, 800000, 2000));
+                new Country(name1, "Asia", null, 1000000, 1000.0),
+                new Country(name2, "Europe", null, 5000000000L, 10000.0));
 
         when(countryDataService.getCountriesByPopulationDensity()).thenReturn(mockCountryList);
 
@@ -49,8 +53,8 @@ public class CountryDataControllerTest {
 
         // Assert
         assertEquals(2, result.size());
-        assertEquals("Country1", result.get(0).getName());
-        assertEquals("Country2", result.get(1).getName());
+        assertEquals("Country1", result.get(0).getName().getCommon());
+        assertEquals("Country2", result.get(1).getName().getCommon());
     }
 
     @Test
