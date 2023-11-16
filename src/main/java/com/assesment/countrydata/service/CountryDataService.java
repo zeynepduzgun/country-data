@@ -7,9 +7,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
@@ -18,7 +21,7 @@ import org.slf4j.Logger;
 import com.assesment.countrydata.model.Country;
 
 @Service
-public class CountryDataService {
+public class CountryDataService implements HealthIndicator {
     private static final Logger logger = LoggerFactory.getLogger(CountryDataService.class);
 
     @Value("${api.url}")
@@ -83,5 +86,20 @@ public class CountryDataService {
                 mostBorderingCountries);
 
         return mostBorderingCountries;
+    }
+
+    @Override
+    public Health health() {
+        if (isCountryDataServiceWorks()) {
+            return Health.up().withDetail("Country Data Service", "Service is running").build();
+        }
+        return Health.down().withDetail("Country Data Service", "Service is not available").build();
+    }
+
+
+    private boolean isCountryDataServiceWorks() {
+        // written only for representation for health check.
+        double chance = ThreadLocalRandom.current().nextDouble();
+        return chance > 0.9;
     }
 }
